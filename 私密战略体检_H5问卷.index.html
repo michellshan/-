@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<title>私密健康企业战略体检 · 愉博士爆品研习社</title>
+<meta name="description" content="5分钟完成，即时生成你的专属战略诊断报告">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100vh;font-family:'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1C1C1C;background:#F5F3EF;-webkit-text-size-adjust:100%}
+
+.screen{display:none;flex-direction:column;min-height:100vh}
+.screen.active{display:flex}
+
+/* ── Header ── */
+.hd{background:#1A3A5C;padding:18px 16px 14px}
+.hd-logo{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.hd-badge{background:#E8622A;color:#fff;font-size:10px;font-weight:600;padding:2px 9px;border-radius:3px;letter-spacing:.05em}
+.hd-brand{font-size:11px;color:#8AAABB}
+.hd-title{font-size:18px;font-weight:600;color:#fff;line-height:1.4;margin-bottom:5px}
+.hd-sub{font-size:11px;color:#8AAABB;line-height:1.6}
+
+/* ── Progress ── */
+.prog-wrap{background:#fff;border-bottom:0.5px solid #E2DDD6;padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
+.prog-track{flex:1;height:4px;background:#E2DDD6;border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:#E8622A;border-radius:2px;transition:width .35s ease}
+.prog-txt{font-size:11px;color:#7A7470;white-space:nowrap;min-width:50px;text-align:right}
+
+/* ── Body ── */
+.body{flex:1;padding:14px 16px 100px}
+
+/* ── Info card ── */
+.info-card{background:#fff;border-radius:10px;border:0.5px solid #E2DDD6;padding:14px;margin-bottom:14px}
+.info-card h3{font-size:13px;font-weight:600;color:#1C1C1C;margin-bottom:10px;padding-bottom:8px;border-bottom:0.5px solid #E2DDD6}
+.field{margin-bottom:10px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:11px;color:#7A7470;margin-bottom:4px}
+.field input,.field select{width:100%;border:0.5px solid #E2DDD6;border-radius:7px;padding:10px 12px;font-size:13px;background:#F5F3EF;color:#1C1C1C;outline:none;font-family:inherit;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus{border-color:#1A3A5C;background:#fff}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7470' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+
+/* ── Dim header ── */
+.dim-hd{display:flex;align-items:center;gap:10px;padding:11px 13px;background:#fff;border-radius:10px;border:0.5px solid #E2DDD6;margin-bottom:10px}
+.dim-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.dim-name{font-size:13px;font-weight:600;color:#1C1C1C}
+.dim-desc{font-size:11px;color:#7A7470;margin-top:2px;line-height:1.4}
+
+/* ── Question card ── */
+.q-card{background:#fff;border-radius:10px;border:0.5px solid #E2DDD6;padding:14px;margin-bottom:10px}
+.q-tag{font-size:10px;color:#7A7470;margin-bottom:6px;letter-spacing:.04em}
+.q-text{font-size:13px;font-weight:500;color:#1C1C1C;line-height:1.65;margin-bottom:12px}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:flex-start;gap:9px;padding:10px 11px;border-radius:8px;border:0.5px solid #E2DDD6;background:#F5F3EF;cursor:pointer;transition:background .15s,border-color .15s;user-select:none}
+.opt:active{opacity:.85}
+.opt.sel{background:#EEF4FB;border-color:#1A3A5C}
+.opt-radio{width:16px;height:16px;border-radius:50%;border:1.5px solid #C0BBB4;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.opt.sel .opt-radio{border-color:#1A3A5C;background:#1A3A5C}
+.opt.sel .opt-radio::after{content:'';width:5px;height:5px;border-radius:50%;background:#fff;display:block}
+.opt-text{font-size:12.5px;color:#1C1C1C;line-height:1.6}
+
+/* ── Submit area ── */
+.submit-area{padding:16px 0 6px;text-align:center}
+.done-count{font-size:12px;color:#7A7470;margin-bottom:6px}
+.done-count strong{color:#E8622A}
+.hint-txt{font-size:11px;color:#B0B0A8;margin-bottom:14px}
+.btn-main{width:100%;padding:14px;background:#1A3A5C;color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:600;letter-spacing:.06em;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.btn-main:disabled{background:#C0BBB4;cursor:not-allowed}
+.btn-main.accent{background:#E8622A}
+.btn-outline{width:100%;padding:13px;background:transparent;color:#1A3A5C;border:1.5px solid #1A3A5C;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:10px;transition:all .2s}
+
+/* ── Result header ── */
+.res-hd{padding:22px 16px 18px;text-align:center;color:#fff}
+.res-badge{display:inline-block;padding:3px 14px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:10px;letter-spacing:.04em}
+.res-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.res-phase{font-size:12px;opacity:.65;margin-bottom:12px}
+.res-score-row{display:flex;align-items:baseline;justify-content:center;gap:5px}
+.res-score-big{font-size:46px;font-weight:700;line-height:1}
+.res-score-max{font-size:14px;opacity:.6}
+
+/* ── Result body ── */
+.res-body{flex:1;padding:14px 16px 80px}
+.sec-title{font-size:13px;font-weight:600;color:#1C1C1C;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:0.5px;background:#E2DDD6}
+
+/* ── Radar grid ── */
+.radar-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:6px}
+.ri{background:#fff;border-radius:9px;border:0.5px solid #E2DDD6;padding:11px 10px}
+.ri-top{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.ri-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.ri-name{font-size:12px;font-weight:500;color:#1C1C1C}
+.bar-w{height:4px;background:#E2DDD6;border-radius:2px;overflow:hidden;margin-bottom:5px}
+.bar-f{height:100%;border-radius:2px;transition:width .7s ease}
+.ri-score{font-size:13px;font-weight:600;color:#1C1C1C}
+.ri-score span{font-size:10px;color:#7A7470;font-weight:400}
+
+/* ── Diag card ── */
+.diag-card{background:#fff;border-radius:10px;border:0.5px solid #E2DDD6;overflow:hidden;margin-bottom:10px}
+.diag-hd-row{padding:10px 14px;display:flex;align-items:center;gap:8px}
+.diag-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.diag-htxt{font-size:13px;font-weight:600}
+.diag-bd{padding:12px 14px;border-top:0.5px solid #E2DDD6}
+.diag-desc{font-size:12.5px;color:#333;line-height:1.8;margin-bottom:0}
+
+/* ── Custom tip card ── */
+.tip-card{background:#fff;border-radius:10px;border:0.5px solid #E2DDD6;overflow:hidden;margin-bottom:10px}
+.tip-tag{padding:8px 14px;font-size:10px;font-weight:600;letter-spacing:.06em}
+.tip-bd{padding:12px 14px}
+.tip-title{font-size:13px;font-weight:600;margin-bottom:8px}
+.tip-pts{display:flex;flex-direction:column;gap:7px}
+.tip-pt{font-size:12.5px;color:#333;line-height:1.65;padding-left:12px;border-left:2.5px solid #E2DDD6}
+
+/* ── Highlight box ── */
+.highlight-box{background:#EEF4FB;border-radius:9px;padding:11px 13px;margin-bottom:10px;border:0.5px solid #B5D4F4}
+.highlight-box p{font-size:12px;color:#0C447C;line-height:1.75}
+
+/* ── Module grid ── */
+.mod-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:10px}
+.mod-card{background:#fff;border-radius:9px;border:0.5px solid #E2DDD6;padding:10px 11px;border-left:3px solid}
+.mod-num{font-size:10px;font-weight:600;margin-bottom:3px}
+.mod-name{font-size:11px;color:#1C1C1C;line-height:1.45}
+.mod-day{font-size:10px;color:#7A7470;margin-top:4px}
+
+/* ── Quote ── */
+.quote-wrap{border-radius:10px;border:0.5px solid #E2DDD6;overflow:hidden;margin-bottom:12px}
+.quote-inner{padding:13px 14px;background:#FEF9EE;border-left:3px solid #E8A020}
+.quote-label{font-size:10px;font-weight:600;color:#B07800;letter-spacing:.07em;margin-bottom:4px}
+.quote-text{font-size:13px;color:#5A3800;line-height:1.75}
+
+/* ── Footer note ── */
+.footer-note{text-align:center;padding:8px 0 4px;font-size:11px;color:#B0B0A8;line-height:1.6}
+
+/* ── Dim section spacing ── */
+.dim-section{margin-bottom:16px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ FORM SCREEN ═══════════════════════ -->
+<div id="s-form" class="screen active">
+
+  <div class="hd">
+    <div class="hd-logo">
+      <span class="hd-badge">愉博士</span>
+      <span class="hd-brand">爆品研习社 · 课前专属自测</span>
+    </div>
+    <div class="hd-title">私密健康企业战略体检</div>
+    <div class="hd-sub">12道题 · 约5分钟 · 填完即出你的专属诊断报告<br>请根据企业目前的真实状态如实选择，没有对错之分</div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+    <div class="prog-txt" id="prog-txt">0 / 12</div>
+  </div>
+
+  <div class="body">
+
+    <!-- 基本信息 -->
+    <div class="info-card">
+      <h3>基本信息（选填）</h3>
+      <div class="field">
+        <label>企业 / 品牌名称</label>
+        <input id="f-company" type="text" placeholder="请填写">
+      </div>
+      <div class="field">
+        <label>主营业务方向</label>
+        <input id="f-biz" type="text" placeholder="如：私密护理、盆底修复、两性健康…">
+      </div>
+      <div class="field">
+        <label>目前重点想突破的产品 / 项目</label>
+        <input id="f-product" type="text" placeholder="填写你最想在研习社解决的那个">
+      </div>
+    </div>
+
+    <!-- 维度一：战略力 -->
+    <div class="dim-section">
+      <div class="dim-hd">
+        <div class="dim-dot" style="background:#1A3A5C">01</div>
+        <div>
+          <div class="dim-name">战略力</div>
+          <div class="dim-desc">看透行业终局，制定三年战略</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q1 · 战略力</div>
+        <div class="q-text">决定引进新仪器或推一个新项目时，你通常是怎么做决定的？</div>
+        <div class="opts" data-q="q1">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">主要看同行在推什么，或者厂家/代理商来介绍说市场反响不错，觉得可以跟一跟</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">会考虑自己店里的客户群需不需要，但最终还是参考了同行做法或厂家的销售数据</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">会先评估一下自己的客户画像和现有项目是否匹配，但没有完整的决策框架，更多靠经验判断</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有相对清晰的产品战略方向，新项目要符合自己的核心定位，决策前会做基本的用户和市场评估</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有明确的三年战略路径，每个新品的引入都要服务于核心用户人群和品牌竞争力，不符合方向的即使利润高也不做</div></div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q2 · 战略力</div>
+        <div class="q-text">如果有人问你：你们家跟区域内同类机构最本质的差别是什么？你通常怎么回答？</div>
+        <div class="opts" data-q="q2">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">价格更实惠，或者服务态度更好，但产品本身跟同行差不多</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">用的仪器品牌不一样，或者包装/项目名字不同，但核心成分和操作逻辑相近</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">在局部有一定优势，比如操作更精细或某个项目有口碑，但整体上还没形成很清晰的差异化</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有比较清楚的优势表述，客户能感知到差别，老客户也愿意帮忙转介绍</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有非常明确的竞争定位，在特定的用户人群或细分赛道上被视为首选，竞争对手难以直接复制</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 维度二：用户力 -->
+    <div class="dim-section">
+      <div class="dim-hd">
+        <div class="dim-dot" style="background:#2B7A6F">02</div>
+        <div>
+          <div class="dim-name">用户力</div>
+          <div class="dim-desc">理解用户深层需求，而非表面诉求</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q3 · 用户力</div>
+        <div class="q-text">你的客户来到你这里，通常是什么让她最终决定做这个项目？你了解这个过程吗？</div>
+        <div class="opts" data-q="q3">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">基本靠顾问在咨询环节介绍功效和优惠，客户主要被价格和活动打动</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">大概知道客户是因为某个症状来的，但具体她在做决定之前经历了什么心理过程，不太清楚</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">了解一部分客户的典型诉求，也知道她们有一些顾虑，咨询话术针对常见问题做了一些对应</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">比较了解目标用户的生活场景和决策逻辑，能在咨询中精准触达她的核心顾虑，成交相对顺畅</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">深度调研过核心用户群，清楚她们从发现问题到下决定的完整心理路径，产品设计和服务动线都围绕这个来</div></div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q4 · 用户力</div>
+        <div class="q-text">客户做完项目之后，你们主要通过什么方式让她们持续回来或者帮你介绍新客户？</div>
+        <div class="opts" data-q="q4">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">主要靠顾问跟进，或者做活动、发优惠券，但复购和转介绍都不稳定</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有基础的回访流程，但触达比较表面，客户的回头更多是因为习惯或价格，不是特别因为产品本身</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有一部分忠实老客户，会主动回来或带人，但这类客户还没有成为稳定的增长来源</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有比较清晰的用户运营机制，老客户的复购和转介绍占了新客来源的一定比例</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">老客自发传播是重要的增长方式，有些客户已经成为品牌的主动推介者，带来了稳定的口碑裂变</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 维度三：产品力 -->
+    <div class="dim-section">
+      <div class="dim-hd">
+        <div class="dim-dot" style="background:#8B4513">03</div>
+        <div>
+          <div class="dim-name">产品力</div>
+          <div class="dim-desc">将所有能力通过产品呈现</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q5 · 产品力</div>
+        <div class="q-text">客户做完你们的核心项目之后，通常有什么反应？她们会怎么描述这次体验？</div>
+        <div class="opts" data-q="q5">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">反应平平，觉得做了有点效果，但没有特别惊喜，问起来也说不出什么具体的感受</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">大部分客户表示满意，但基本停留在"感觉还不错"，少有人会主动描述具体体验或主动推荐</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有一部分客户反馈效果明显，偶尔有人会自发晒出来或跟朋友提，但不是普遍现象</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">老客户中有相当比例会有很强的正向体验感受，会用自己的语言描述出来，也会推荐给身边人</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">产品体验有明确的"尖叫点"，客户做完之后往往有具体的感受描述，不少人会自发传播或在社群里分享</div></div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q6 · 产品力</div>
+        <div class="q-text">当客户做完一个疗程之后，她下一步通常会怎样？你们有没有为此设计完整的服务路径？</div>
+        <div class="opts" data-q="q6">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">做完基本就结束了，后续主要靠顾问打电话跟进，没有固定的续单动线</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有简单的回访流程，但客户是否续单更多看顾问的个人能力，没有系统性的产品接续方案</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有一些后续项目可以推荐，但客户做完第一阶段之后的路径不够清晰，成交延续率不稳定</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有相对完整的阶段性服务设计，客户做完一个阶段自然会进入下一个阶段，整体流失率较低</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有清晰的全生命周期服务路径，从初次体验到长效管理每个环节都有对应的产品和服务，客户很少做完就走</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 维度四：营销力 -->
+    <div class="dim-section">
+      <div class="dim-hd">
+        <div class="dim-dot" style="background:#7B3FA0">04</div>
+        <div>
+          <div class="dim-name">营销力</div>
+          <div class="dim-desc">让产品自带传播属性</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q7 · 营销力</div>
+        <div class="q-text">你们目前获取新客户的方式主要是哪些？如果这些方式停掉一个月，新客户还会来吗？</div>
+        <div class="opts" data-q="q7">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">主要靠活动、地推或渠道返佣，没有这些投入，基本没有新客自然进来</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">公域广告是主要来源，停了广告新客明显减少，口碑转介绍占比不高</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有一定的老客转介绍，也在做内容或私域，但主动流量来源还比较分散，没有形成稳定路径</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">口碑和转介绍贡献了相当比例的新客，广告是辅助而非唯一依靠</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">大部分新客来自老客推荐或产品本身带来的自然传播，获客成本低，且相对稳定</div></div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q8 · 营销力</div>
+        <div class="q-text">当你向一个从未接触过你们的潜在客户介绍自己的产品时，你通常怎么让她理解"为什么选你"？</div>
+        <div class="opts" data-q="q8">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">主要讲价格优惠或促销活动，产品本身的介绍比较模糊，很难让客户有清晰的感知</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">会讲技术参数或仪器品牌，但客户听完还是很难判断跟别家有什么本质区别</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有一套基础的介绍话术，能说清楚主要功效，但在遇到有比较经验的客户时，有时候不太好应对</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有比较清晰的卖点表述，能用客户听得懂的语言讲出产品价值，成交率相对稳定</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有非常精准的差异化表达，能直接触达目标客户的核心关切，对方往往不需要太多犹豫</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 维度五：技术力 -->
+    <div class="dim-section">
+      <div class="dim-hd">
+        <div class="dim-dot" style="background:#1A6B8A">05</div>
+        <div>
+          <div class="dim-name">技术力</div>
+          <div class="dim-desc">理解技术如何服务于用户价值</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q9 · 技术力</div>
+        <div class="q-text">你的团队在向客户解释一个私密项目的时候，通常从哪个角度切入？客户的反应怎么样？</div>
+        <div class="opts" data-q="q9">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">主要说仪器参数或成分名称，但很多客户听完之后一脸茫然，不知道这对自己意味着什么</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">会加上功效说明，但介绍偏专业和技术化，客户能理解大意，但体感认同感不强</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">能结合客户的症状场景做解释，部分客户能产生比较强的共鸣，但还不够稳定</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">会从客户的生活场景和感受出发，把技术原理转化成她能感知的体验描述，成交沟通比较顺畅</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">团队有系统的"技术转感知"方法，能把成分、仪器的作用精准翻译成客户能感受到的体验变化，信任建立很快</div></div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q10 · 技术力</div>
+        <div class="q-text">当客户对你们的产品提出质疑（如"这个成分是不是普通的""效果能保多久"），你们通常怎么应对？</div>
+        <div class="opts" data-q="q10">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">主要靠顾问的话术应对，缺乏可以拿出来的实质性证明，遇到懂行的客户比较被动</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">会给客户看厂家提供的资料或认证，但这些内容比较通用，说服力有限</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有自己整理的一些客户案例和效果对比，能应对大部分问题，但遇到深度追问时有时底气不足</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有比较充足的证据体系，包括数据、案例、临床说明，能有效回应客户疑虑</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有完整的技术信任体系，对成分原理、临床验证、使用场景都能专业且贴近客户地讲清楚，基本不会被问住</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 维度六：领导力 -->
+    <div class="dim-section">
+      <div class="dim-hd">
+        <div class="dim-dot" style="background:#C0392B">06</div>
+        <div>
+          <div class="dim-name">领导力</div>
+          <div class="dim-desc">带领团队达成共识</div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q11 · 领导力</div>
+        <div class="q-text">你有没有想过：你对产品方向的判断，和你的团队在一线执行时的理解，是不是一回事？</div>
+        <div class="opts" data-q="q11">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">基本靠老板自己判断，团队更多是执行，对为什么做这个产品/项目理解比较浅</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有基本的培训，团队知道怎么操作，但对产品背后的用户逻辑和核心卖点理解不一致</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">核心团队的认同度还不错，但在客户沟通和一线交付上，不同人的表现差异比较大</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">团队对产品定位和核心卖点有比较一致的理解，一线交付相对稳定，不太依赖某一两个关键人</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">团队对产品和用户的理解高度一致，每个人都能清晰表达核心价值，整体交付质量稳定且有感染力</div></div>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-tag">Q12 · 领导力</div>
+        <div class="q-text">当一个产品/项目效果不达预期的时候，你们企业通常是怎么处理的？</div>
+        <div class="opts" data-q="q12">
+          <div class="opt" data-v="1" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">主要靠老板判断要不要继续，没有收集用户反馈的机制，基本靠直觉决定换不换方向</div></div>
+          <div class="opt" data-v="2" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">会调整销售话术或促销方式，但很少从产品本身或用户需求的角度去深入复盘</div></div>
+          <div class="opt" data-v="3" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">会做一些内部讨论和总结，也会听取客户意见，但改进的机制不够系统，落地效率一般</div></div>
+          <div class="opt" data-v="4" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">有相对规范的复盘机制，从用户反馈到产品优化有比较清晰的路径，迭代速度比同行快</div></div>
+          <div class="opt" data-v="5" onclick="sel(this)"><div class="opt-radio"></div><div class="opt-text">建立了持续的用户反馈—产品迭代闭环，团队有主动收集问题和快速优化的习惯，产品越来越好不是偶然</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 提交 -->
+    <div class="submit-area">
+      <div class="done-count" id="done-count">已完成 <strong>0</strong> / 12 题</div>
+      <div class="hint-txt">全部完成后即可生成你的专属诊断报告</div>
+      <button class="btn-main" id="btn-submit" onclick="doSubmit()" disabled>生成我的专属诊断报告</button>
+    </div>
+
+    <div class="footer-note">愉博士爆品研习社 · 专属体检工具<br>结果仅供学习参考，不作商业评级用途</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ RESULT SCREEN ═══════════════════════ -->
+<div id="s-result" class="screen">
+  <div class="res-hd" id="res-hd">
+    <div class="res-badge" id="res-badge"></div>
+    <div class="res-name" id="res-name"></div>
+    <div class="res-phase" id="res-phase"></div>
+    <div class="res-score-row">
+      <div class="res-score-big" id="res-score">0</div>
+      <div class="res-score-max">/ 100 分</div>
+    </div>
+  </div>
+  <div class="res-body">
+    <div class="sec-title">六维度得分</div>
+    <div class="radar-grid" id="radar-grid"></div>
+
+    <div class="sec-title">综合段位诊断</div>
+    <div id="diag-area"></div>
+
+    <div class="sec-title">你的个性化学习建议</div>
+    <div id="tip-area"></div>
+
+    <div class="sec-title">研习社重点模块</div>
+    <div class="highlight-box"><p><strong>根据你的诊断结果</strong>，建议重点深入参与以下模块。其他模块同样重要，但这几个是你当前阶段最需要突破的核心卡点。</p></div>
+    <div class="mod-grid" id="mod-grid"></div>
+
+    <div class="sec-title">总裁心法</div>
+    <div class="quote-wrap" id="quote-wrap"></div>
+
+    <div class="footer-note" style="margin-bottom:8px">
+      截图保存此报告，带着你的问题来研习社现场<br>导师会根据你的体检结果给出针对性指导
+    </div>
+    <button class="btn-outline" onclick="doRestart()">重新填写</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<script>
+var ans = {};
+var DC = ['#1A3A5C','#2B7A6F','#8B4513','#7B3FA0','#1A6B8A','#C0392B'];
+var DN = ['战略力','用户力','产品力','营销力','技术力','领导力'];
+var DQ = [['q1','q2'],['q3','q4'],['q5','q6'],['q7','q8'],['q9','q10'],['q11','q12']];
+
+var LEVELS = [
+  {r:[0,35],badge:'段位一',name:'私密盲流',phase:'生存红灯期',hc:'#C0392B',bb:'#F5C6C0',bt:'#7B1D14',
+   desc:'目前企业的产品方向主要靠感觉和跟风，还没有形成清晰的用户认知和差异化竞争逻辑。销售更多依赖顾问的个人能力和活动促销，新客来源不稳定，老客复购也比较低。产品还没有真正站到用户一边来思考和设计。',
+   quote:'一个粗糙的开始是一个最好的开始。这三天两夜，我们现场帮你把方向调清楚。'},
+  {r:[36,60],badge:'段位二',name:'流量奴隶',phase:'战略卡点期',hc:'#E8622A',bb:'#FAD9C8',bt:'#7A2800',
+   desc:'你的团队有基础的交付能力，也懂得包装和运营，但新客来源严重依赖广告投入和渠道费用。产品本身还不会"自己说话"——客户做完之后没有形成强烈的体感记忆，自然也就不会主动传播。问题不是努力不够，是产品还没有跟用户真正连接起来。',
+   quote:'产品最终会被场景替代。让产品在交付现场自己长出口碑，是接下来最重要的一件事。'},
+  {r:[61,80],badge:'段位三',name:'区域诸侯',phase:'及格中坚期',hc:'#2B7A6F',bb:'#BEE0DA',bt:'#0D3D36',
+   desc:'你在特定区域或细分赛道已经建立了一定的竞争优势，老客基础扎实，团队认同度高。但盈利模式还比较单一，主要停留在卖单次项目，缺乏完整的产品升级路径和生态闭环，还没在用户心中建立起无可替代的"唯一感"。',
+   quote:'你已经有了很好的基础。接下来的突破，在于把单点优势变成系统壁垒，从区域诸侯走向品类第一。'},
+  {r:[81,100],badge:'段位四',name:'超级产品经理',phase:'降维领跑者',hc:'#1A3A5C',bb:'#B8CEE8',bt:'#0A1D30',
+   desc:'你已经建立了比较完整的爆品逻辑，用户思维、产品设计和团队执行之间的闭环基本跑通。产品有口碑，团队有共识，客户有主动传播。目前需要关注的是：如何在此基础上持续创新，防止因过于成熟而忽视了新的竞争变量。',
+   quote:'你已经领跑了。接下来的差距，是系统思维的精细程度和行动速度。'}
+];
+
+var MODS = [
+  {n:'模块一',t:'核心能力定位与红蓝爆品思维',d:'DAY 1 上午',c:'#1A3A5C'},
+  {n:'模块二',t:'三三制用户思维与场景痛点机制',d:'DAY 1 下午',c:'#2B7A6F'},
+  {n:'模块三',t:'全人全景解决方案（全生命周期）',d:'DAY 2 上午',c:'#8B4513'},
+  {n:'模块四',t:'痛点转化与爆品卖点提炼',d:'DAY 2 下午',c:'#7B3FA0'},
+  {n:'模块五',t:'品牌信任资产与口碑裂变系统',d:'DAY 3 上午',c:'#1A6B8A'},
+  {n:'模块六',t:'六芒星盈利模型与定价飞轮',d:'DAY 3 下午',c:'#C0392B'}
+];
+
+function dScore(di) {
+  var qs = DQ[di];
+  return Math.round(((ans[qs[0]]||0)+(ans[qs[1]]||0))/10*20);
+}
+function total(ds) {
+  return Math.round(ds.reduce(function(a,b){return a+b},0)/ds.length*5);
+}
+
+function sel(el) {
+  var opts = el.parentNode;
+  var all = opts.querySelectorAll('.opt');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('sel');
+  el.classList.add('sel');
+  ans[opts.getAttribute('data-q')] = parseInt(el.getAttribute('data-v'));
+  updateProg();
+}
+
+function updateProg() {
+  var done = Object.keys(ans).length;
+  var pct = done/12*100;
+  document.getElementById('prog').style.width = pct+'%';
+  document.getElementById('prog-txt').textContent = done+' / 12';
+  document.getElementById('done-count').innerHTML = '已完成 <strong>'+done+'</strong> / 12 题';
+  document.getElementById('btn-submit').disabled = done < 12;
+}
+
+function getTips(ds) {
+  var LOW=8, HIGH=14;
+  var st=ds[0],us=ds[1],pr=ds[2],mk=ds[3],tc=ds[4],ld=ds[5];
+  var tips=[];
+
+  if(st<=LOW && us<=LOW) tips.push({tag:'战略 × 用户 双弱',c:'#C0392B',bg:'#FDF4F3',
+    title:'先搞清楚"为谁做"，再谈"做什么"',
+    pts:['优先参加模块一 + 模块二，这两天是你整个研习社的学习命脉',
+         '从前100个铁粉用户出发，重新定义你的核心客户画像，暂停所有新品规划',
+         '方向不对，越努力越失败——在研习社现场，要做好推倒重来、重新立项的准备']});
+
+  if(st<=LOW && us>LOW) tips.push({tag:'战略弱 · 用户感知尚可',c:'#E8622A',bg:'#FEF5F0',
+    title:'你懂用户，但还没把它转化成清晰的战略路径',
+    pts:['重点参加模块一，把核心能力和竞争定位系统化，不要再靠感觉做战略决策',
+         '你对用户的了解有没有真正反映在产品立项和定价决策上？这是你要思考的核心问题',
+         '战略路径模糊的企业，容易在行业整合期中被动出局，现在是建立清晰路径的最好时机']});
+
+  if(us<=LOW && pr<=LOW) tips.push({tag:'用户 × 产品 双弱',c:'#8B4513',bg:'#FDF6F0',
+    title:'产品和用户之间还没有真正连接上',
+    pts:['模块二（用户画布）和模块四（卖点提炼）是你的核心战场，要重度参与',
+         '检验标准只有一个：你的产品做完之后，客户能不能用自己的语言描述出体验？',
+         '不要再靠顾问话术卖产品，先让产品本身在场景里开口说话']});
+
+  if(pr>=HIGH && mk<=LOW) tips.push({tag:'产品强 · 营销弱',c:'#7B3FA0',bg:'#F6F0FC',
+    title:'你有好产品，但还没让足够多的人看见它',
+    pts:['重点参加模块五（口碑裂变系统），学习如何让产品自带传播属性，降低获客成本',
+         '你的问题不是产品不好，是好产品还没有找到属于自己的传播语言和渠道路径',
+         '信任资产的建立比广告投放更持久，优先建立口碑机制，再考虑扩大投放']});
+
+  if(pr<=LOW && mk>=HIGH) tips.push({tag:'营销强 · 产品弱',c:'#1A6B8A',bg:'#F0F7FB',
+    title:'你会带流量，但产品本身还留不住人',
+    pts:['重点参加模块三 + 模块四，把全生命周期解决方案和产品卖点做扎实',
+         '流量再好，体验不行，复购就是零——现在是时候把精力转到产品侧了',
+         '先把核心爆品一条线做透，再考虑扩大营销投入，否则就是在漏水的桶里继续倒水']});
+
+  if(mk<=LOW && tc<=LOW) tips.push({tag:'营销 × 技术 双弱',c:'#1A6B8A',bg:'#F0F7FB',
+    title:'技术说不清楚，营销也没有方向',
+    pts:['模块四（卖点提炼）+ 模块五（信任体系建设）是你的重点，要在研习社现场完成练习',
+         '你的技术能力可能并不差，但没有转化成客户可感知的语言——这是最大的浪费',
+         '先把一个核心产品的卖点体系做透，再考虑延伸和扩展']});
+
+  if(ld<=LOW) tips.push({tag:'领导力有待提升',c:'#444441',bg:'#F5F3EF',
+    title:'方向再好，团队落地不了也是空的',
+    pts:['研习社三天，如果可能的话，要带核心团队成员一起来，不要自己一个人听完回去',
+         '你的产品方向和团队的执行理解之间存在落差，会直接影响到客户端的交付质量',
+         '模块六的盈利模型讨论之前，建议先和团队对齐核心产品的用户价值主张']});
+
+  var allHigh = ds.every(function(s){return s>=HIGH});
+  if(allHigh) tips.push({tag:'全维度领跑',c:'#1A3A5C',bg:'#EEF4FB',
+    title:'你已经跑通了基本闭环，现在需要的是系统升维',
+    pts:['重度参与第三天下午的超级爆品模拟发布会，把三天所学融会贯通，完成一次完整的系统复盘',
+         '思考如何让前100个铁粉用户成为品牌研发合伙人，而不只是消费者',
+         '保持敏捷行动力——你现在最大的风险，是因为稳定而忽视了新的竞争变量']});
+
+  if(tips.length===0) {
+    var sorted=ds.map(function(s,i){return{s:s,i:i}}).sort(function(a,b){return a.s-b.s});
+    var w1=sorted[0],w2=sorted[1];
+    tips.push({tag:DN[w1.i]+' + '+DN[w2.i]+' 是你的突破口',c:DC[w1.i],bg:'#F5F3EF',
+      title:'聚焦你得分最低的两个维度，集中突破',
+      pts:[DN[w1.i]+'（'+w1.s+'/20分）：优先在研习社中针对这个维度的模块深度参与，做完现场练习',
+           DN[w2.i]+'（'+w2.s+'/20分）：带着具体的企业问题去和导师沟通，不要泛泛而谈',
+           '其他维度你已经有了一定基础，不要分散注意力，先把短板集中补上']});
+  }
+  return tips;
+}
+
+function getKeyMods(ds) {
+  var LOW=8;
+  var st=ds[0],us=ds[1],pr=ds[2],mk=ds[3],tc=ds[4],ld=ds[5];
+  var p=[];
+  if(st<=LOW) p.push(0);
+  if(us<=LOW) p.push(1);
+  if(pr<=LOW){if(p.indexOf(2)<0)p.push(2);if(p.indexOf(3)<0)p.push(3);}
+  if(mk<=LOW){if(p.indexOf(4)<0)p.push(4);}
+  if(tc<=LOW){if(p.indexOf(3)<0)p.push(3);}
+  if(ld<=LOW){if(p.indexOf(5)<0)p.push(5);}
+  var allHigh=ds.every(function(s){return s>LOW});
+  if(allHigh){p=[5];}
+  if(p.length===0){
+    var sorted=ds.map(function(s,i){return{s:s,i:i}}).sort(function(a,b){return a.s-b.s});
+    sorted.slice(0,2).forEach(function(x){if(p.indexOf(x.i)<0)p.push(x.i);});
+  }
+  for(var i=0;i<6&&p.length<4;i++){if(p.indexOf(i)<0)p.push(i);}
+  return p.slice(0,4);
+}
+
+function doSubmit() {
+  var ds=[0,1,2,3,4,5].map(dScore);
+  var tot=total(ds);
+  var lv=LEVELS.filter(function(l){return tot>=l.r[0]&&tot<=l.r[1]})[0]||LEVELS[0];
+  var tips=getTips(ds);
+  var kmods=getKeyMods(ds);
+
+  var hd=document.getElementById('res-hd');
+  hd.style.background=lv.hc;
+  var badge=document.getElementById('res-badge');
+  badge.textContent=lv.badge;
+  badge.style.background=lv.bb;
+  badge.style.color=lv.bt;
+  document.getElementById('res-name').textContent=lv.name;
+  document.getElementById('res-phase').textContent=lv.phase;
+  document.getElementById('res-score').textContent=tot;
+
+  var rg=document.getElementById('radar-grid');
+  rg.innerHTML='';
+  ds.forEach(function(s,i){
+    var pct=s/20*100;
+    rg.innerHTML+='<div class="ri"><div class="ri-top"><div class="ri-dot" style="background:'+DC[i]+'">'+(i+1)+'</div><div class="ri-name">'+DN[i]+'</div></div><div class="bar-w"><div class="bar-f" style="width:'+pct+'%;background:'+DC[i]+'"></div></div><div class="ri-score">'+s+'<span>/20分</span></div></div>';
+  });
+
+  document.getElementById('diag-area').innerHTML='<div class="diag-card"><div class="diag-hd-row" style="background:'+lv.bb+'"><div class="diag-dot" style="background:'+lv.hc+'"></div><div class="diag-htxt" style="color:'+lv.hc+'">'+lv.badge+' · '+lv.name+' · '+lv.phase+'</div></div><div class="diag-bd"><div class="diag-desc">'+lv.desc+'</div></div></div>';
+
+  var ta=document.getElementById('tip-area');
+  ta.innerHTML='';
+  tips.forEach(function(t){
+    ta.innerHTML+='<div class="tip-card"><div class="tip-tag" style="background:'+t.bg+';color:'+t.c+'">'+t.tag+'</div><div class="tip-bd"><div class="tip-title" style="color:'+t.c+'">'+t.title+'</div><div class="tip-pts">'+t.pts.map(function(p){return'<div class="tip-pt">'+p+'</div>'}).join('')+'</div></div></div>';
+  });
+
+  var mg=document.getElementById('mod-grid');
+  mg.innerHTML='';
+  kmods.forEach(function(mi){
+    var m=MODS[mi];
+    mg.innerHTML+='<div class="mod-card" style="border-left-color:'+m.c+'"><div class="mod-num" style="color:'+m.c+'">'+m.n+'</div><div class="mod-name">'+m.t+'</div><div class="mod-day">'+m.d+'</div></div>';
+  });
+
+  document.getElementById('quote-wrap').innerHTML='<div class="quote-inner"><div class="quote-label">总裁心法</div><div class="quote-text">'+lv.quote+'</div></div>';
+
+  document.getElementById('s-form').classList.remove('active');
+  document.getElementById('s-result').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function doRestart() {
+  ans={};
+  var opts=document.querySelectorAll('.opt');
+  for(var i=0;i<opts.length;i++) opts[i].classList.remove('sel');
+  updateProg();
+  document.getElementById('s-result').classList.remove('active');
+  document.getElementById('s-form').classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
